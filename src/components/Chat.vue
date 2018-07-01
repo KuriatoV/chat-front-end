@@ -7,16 +7,12 @@
   
     <div class="chat__main">
   
-      <div class="chat__messages">
-        <div class="message-item" v-for="message in messages" :key="message.createdAt">
-          <div v-if="message && message.url">
-            {{message.from}} {{message.formattedTime}} <a target="_blank" v-bind:href="message.url">My current location</a>
-          </div>
-          <div v-else>
-            {{message.from}} {{message.formattedTime}}:{{message.text}}
-          </div>
-        </div>
-      </div>
+    
+        <ol  class="chat__messages"  >
+         <LocationMessage  v-for="message in messages" :key="message.createdAt" v-if="message && message.url" v-bind:message="message"/>
+         <Message   v-else v-bind:message="message"/>
+        
+      </ol>
   
       <div class="chat__footer">
         <form id='message-form'>
@@ -34,9 +30,12 @@
 
 <script>
 import * as moment from 'moment';
+import Message from './Message'
+import LocationMessage from './LocationMessage'
 
   export default {
     name: 'Chat',
+    components:{Message,LocationMessage},
     props: {},
   
     data: function() {
@@ -118,7 +117,7 @@ import * as moment from 'moment';
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style >
   * {
     box-sizing: border-box;
     margin: 0;
