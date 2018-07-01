@@ -4,7 +4,7 @@ const http = require('http');
 
 const { generateMessage, generateLocationMessage } = require('./utils/message');
 const socketIO = require('socket.io');
-const publicPath = path.join(__dirname, '/dist/');
+const publicPath = path.join(__dirname, '../dist/');
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -13,7 +13,7 @@ const io = socketIO(server);
 
 app.use(express.static(publicPath));
 app.get(/.*/, function(req, res) {
-	res.sendFile(__dirname + '/dist/index.html');
+	res.sendFile(publicPath + 'index.html');
 });
 io.on('connection', (socket) => {
 	socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
