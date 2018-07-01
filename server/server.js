@@ -12,7 +12,9 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 app.use(express.static(publicPath));
-
+app.get(/.*/, function(req, res) {
+	res.sendFile(__dirname + '/dist/index.html');
+});
 io.on('connection', (socket) => {
 	socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
 
@@ -25,11 +27,10 @@ io.on('connection', (socket) => {
 		}
 	});
 
-	socket.on('createLocationMessage',  (coords, callback) => {
+	socket.on('createLocationMessage', (coords, callback) => {
 		const { latitude, longitude } = coords;
 		io.emit('newLocationMessage', generateLocationMessage('Admin', latitude, longitude));
 		if (callback) {
-			
 			callback();
 		}
 	});
