@@ -10,10 +10,10 @@
       <div class="chat__messages">
         <div class="message-item" v-for="message in messages" :key="message.createdAt">
           <div v-if="message && message.url">
-            {{message.from}} <a target="_blank" v-bind:href="message.url">My current location</a>
+            {{message.from}} {{message.formattedTime}} <a target="_blank" v-bind:href="message.url">My current location</a>
           </div>
           <div v-else>
-            {{message.from}}:{{message.text}}
+            {{message.from}} {{message.formattedTime}}:{{message.text}}
           </div>
         </div>
       </div>
@@ -47,14 +47,12 @@ import * as moment from 'moment';
     },
     sockets: {
       connect(e) {
-        console.log('connected', e)
         this.$options.sockets.newMessage = (message) => {
-          message.createdAt=moment( message.createdAt).format()
+          message.formattedTime=moment(message.createdAt).format('h:mm:a');
           this.addNewMessage(message)
         }
         this.$options.sockets.newLocationMessage = (message) => {
-          console.log('location', message)
-          message.createdAt=moment( message.createdAt).format()
+          message.formattedTime=moment( message.createdAt).format('h:mm:a');
           this.addNewMessage(message)
         }
   
@@ -66,19 +64,21 @@ import * as moment from 'moment';
     },
     methods: {
       addNewMessage: function(message) {
-        this.messages.push(message)
+          this.messages.push(message)
       },
       send: function(e) {
         e.preventDefault();
         const text = this.$refs.newMessage.value;
-        this.$socket.emit('createMessage', {
-          from: 'User1',
+        if (text && text.length){
+
+          this.$socket.emit('createMessage', {
+            from: 'User1',
           text
         }, () => {
-          console.log('suuukaaa')
           this.$refs.newMessage.value = ""
   
         })
+        }
       },
       sendLocation: async function() {
         this.$refs.sendLocButton.disabled = "disabled"
