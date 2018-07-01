@@ -13,8 +13,7 @@ const io = socketIO(server);
 
 app.use(express.static(publicPath));
 app.get(/.*/, function(req, res) {
-	res.send('lol');
-	// res.sendFile(__dirname + '/dist/index.html');
+	res.sendFile(__dirname + '/dist/index.html');
 });
 io.on('connection', (socket) => {
 	socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
